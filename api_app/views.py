@@ -36,3 +36,12 @@ class CartItemViews(APIView):
         return Response(
             {"status": "success", "data": serializer.data}, status=status.HTTP_200_OK
         )
+
+    def patch(self, request, id=None):
+        item = CartItem.objects.get(id=id)
+        serializer = CartItemSerializer(item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data})
+        else:
+            return Response({"status": "error", "data": serializer.errors})
